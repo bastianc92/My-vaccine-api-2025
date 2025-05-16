@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  webapi:
+    build:
+      context: .
+      dockerfile: MyVaccine.WebApi/DockerFile
+    ports:
+      - "38791:80"
+    depends_on:
+      - db
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=myVaccineDB;User=sa;Password=Your_password123;Encrypt=false;
+    networks:
+      - myvaccinenet
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "38792:1433"
+    networks:
+      - myvaccinenet
+
+networks:
+  myvaccinenet:
+    driver: bridge
